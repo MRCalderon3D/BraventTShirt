@@ -97,9 +97,9 @@ export default class WearAHat {
                     .then((res: any) => res.json())
                     .then((json: any) => {
                         if(DEBUG){ console.log(json); }
-                        this.HatDatabase = Object.assign({}, json, require(this.controls));;
+                        this.HatDatabase = Object.assign({}, json, require(this.controls));
                         this.started();
-                    })
+                    });
            }
             else {
                 // Choose the set of helmets
@@ -145,6 +145,7 @@ export default class WearAHat {
 
         });
         this.context.onUserLeft(user => this.userLeft(user));
+        this.context.onUserJoined( () => this.userJoin());
     }
 
     /**
@@ -154,6 +155,16 @@ export default class WearAHat {
         if(DEBUG){ console.log(this.HatDatabase); }
         // Show the hat menu.
         this.showHatMenu();
+    }
+
+    /**
+     * Called when a user joins the application.
+     * @param user The user that left the building.
+     */
+     private userJoin() {
+        for (const [key , value] of this.attachedHats) {
+            value.attachment.userId = key;
+        }
     }
 
     /**
@@ -178,7 +189,7 @@ export default class WearAHat {
         // check for options first since order isn't guaranteed in a dict
         for (const k of Object.keys(this.HatDatabase)) {
             if (k == "options"){
-                const options = this.HatDatabase[k]
+                const options = this.HatDatabase[k];
                 if (options.previewMargin){
                     this.previewMargin = options.previewMargin;
                 }
@@ -192,12 +203,12 @@ export default class WearAHat {
             const hatRecord = this.HatDatabase[hatId];
 
             // Create a clickable button.
-            var button;
+            let button;
 
             // special scaling and rotation for menu
-            const rotation = hatRecord.menuRotation ? hatRecord.menuRotation : { x: 0, y: 0, z: 0 }
-            const scale = hatRecord.menuScale ? hatRecord.menuScale : { x: 3, y: 3, z: 3 }
-            const position = hatRecord.menuPosition ? hatRecord.menuPosition : { x: 0, y: 1, z: 0 }
+            const rotation = hatRecord.menuRotation ? hatRecord.menuRotation : { x: 0, y: 0, z: 0 };
+            const scale = hatRecord.menuScale ? hatRecord.menuScale : { x: 3, y: 3, z: 3 };
+            const position = hatRecord.menuPosition ? hatRecord.menuPosition : { x: 0, y: 1, z: 0 };
 
             // Create a Artifact without a collider
             MRE.Actor.CreateFromLibrary(this.context, {
@@ -210,7 +221,7 @@ export default class WearAHat {
                                 rotation.x * MRE.DegreesToRadians,
                                 rotation.y * MRE.DegreesToRadians,
                                 rotation.z * MRE.DegreesToRadians),
-                            scale: scale
+                            scale
                         }
                     }
                 }
@@ -241,7 +252,7 @@ export default class WearAHat {
             // Set a click handler on the button.
             // NOTE: button press event fails on MAC
             button.setBehavior(MRE.ButtonBehavior).onClick(user => this.wearHat(hatId, user.id));
-            //button.setBehavior(MRE.ButtonBehavior).onButton('pressed', user => this.wearHat(hatId, user.id));
+            // button.setBehavior(MRE.ButtonBehavior).onButton('pressed', user => this.wearHat(hatId, user.id));
 
             x += this.previewMargin;
         }
@@ -261,23 +272,27 @@ export default class WearAHat {
             return;
         }
         else if (hatId == "moveup!") {
-            if (this.attachedHats.has(userId))
+            if (this.attachedHats.has(userId)) {
                 this.attachedHats.get(userId).transform.local.position.y += 0.01;
+            }
             return;
         }
         else if (hatId == "movedown!") {
-            if (this.attachedHats.has(userId))
+            if (this.attachedHats.has(userId)) {
                 this.attachedHats.get(userId).transform.local.position.y -= 0.01;
+            }
             return;
         }
         else if (hatId == "moveforward!") {
-            if (this.attachedHats.has(userId))
+            if (this.attachedHats.has(userId)) {
                 this.attachedHats.get(userId).transform.local.position.z += 0.01;
+            }
             return;
         }
         else if (hatId == "moveback!") {
-            if (this.attachedHats.has(userId))
+            if (this.attachedHats.has(userId)) {
                 this.attachedHats.get(userId).transform.local.position.z -= 0.01;
+            }
             return;
         }
         else if (hatId == "sizeup!") {
@@ -306,26 +321,26 @@ export default class WearAHat {
         // Create the hat model and attach it to the avatar's head.
         // Jimmy
 
-        const position = hatRecord.position ? hatRecord.position : { x: 0, y: 0, z: 0 }
-        const scale = hatRecord.scale ? hatRecord.scale : { x: 1.5, y: 1.5, z: 1.5 }
-        const rotation = hatRecord.rotation ? hatRecord.rotation : { x: 0, y: 180, z: 0 }
-        const attachPoint = <MRE.AttachPoint> (hatRecord.attachPoint ? hatRecord.attachPoint : 'head')
+        const position = hatRecord.position ? hatRecord.position : { x: 0, y: 0, z: 0 };
+        const scale = hatRecord.scale ? hatRecord.scale : { x: 1.5, y: 1.5, z: 1.5 };
+        const rotation = hatRecord.rotation ? hatRecord.rotation : { x: 0, y: 180, z: 0 };
+        const attachPoint = (hatRecord.attachPoint ? hatRecord.attachPoint : 'head') as MRE.AttachPoint;
 
         const actor = MRE.Actor.CreateFromLibrary(this.context, {
             resourceId: hatRecord.resourceId,
             actor: {
                 transform: {
                     local: {
-                        position: position,
+                        position,
                         rotation: MRE.Quaternion.FromEulerAngles(
                             rotation.x * MRE.DegreesToRadians,
                             rotation.y * MRE.DegreesToRadians,
                             rotation.z * MRE.DegreesToRadians),
-                        scale: scale
+                        scale
                     }
                 },
                 attachment: {
-                    attachPoint: attachPoint,
+                    attachPoint,
                     userId
                 }
             }
