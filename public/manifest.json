@@ -1,5 +1,5 @@
 {
-    "name": "Helmets",
-    "author": "Microsoft",
-    "optionalPermissions": ["user-interaction"]
+	"name": "MRE Wearables",
+	"author": "Bravent",
+	"optionalPermissions": ["user-interaction"]
 }
