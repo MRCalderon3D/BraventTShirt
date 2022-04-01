@@ -79,14 +79,16 @@ export class ClothManager {
 			},
 		});
 
-		model.transform.local.scale =  new MRE.Vector3(0, 0, 0);
-		Utilities.ScaleAnimation(model, new MRE.Vector3(1, 1, 1), 0.5);
-
+		
 		// Set a click handler on the button.
 		// NOTE: button press event fails on MAC
 		Utilities.CreateHoverButton(model).onClick((user) =>
 			ClothManager.CreateCloth(clothRecord, user)
 		);
+
+		model.transform.local.scale =  new MRE.Vector3(0, 0, 0);
+		Utilities.ScaleAnimation(model, new MRE.Vector3(1, 1, 1), 0.5);
+
 
 		return holder;
 	}
