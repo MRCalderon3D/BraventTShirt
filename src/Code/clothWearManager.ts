@@ -1,4 +1,5 @@
 import * as MRE from "@microsoft/mixed-reality-extension-sdk";
+import { EaseCurve } from "@microsoft/mixed-reality-extension-sdk";
 import App from "../app";
 import { Utilities } from "./utilities";
 
@@ -72,10 +73,15 @@ export class ClothManager {
 		});
 
 		// Create a Artifact without a collider
-		const model = MRE.Actor.CreateFromLibrary(App.Context, {
+		let model = MRE.Actor.CreateFromLibrary(App.Context, {
 			resourceId: clothRecord.resourceId,
 			actor: {
 				parentId: holder.id,
+				transform: {
+					local: {
+						scale: new MRE.Vector3(0, 0, 0),
+					},
+				},
 			},
 		});
 		
@@ -85,8 +91,8 @@ export class ClothManager {
 			ClothManager.CreateCloth(clothRecord, user)
 		);
 
-		// model.transform.local.scale =  new MRE.Vector3(0, 0, 0);
-		// Utilities.ScaleAnimation(model, new MRE.Vector3(1, 1, 1), 0.5);
+		const myCurve: EaseCurve = [0.17,0.67,0.59,1.28]
+		Utilities.ScaleAnimation(model, new MRE.Vector3(1, 1, 1), 0.5, myCurve);
 
 		return holder;
 	}

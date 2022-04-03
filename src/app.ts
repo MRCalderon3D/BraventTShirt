@@ -1,11 +1,8 @@
 import * as MRE from "@microsoft/mixed-reality-extension-sdk";
 
 import fetch from "node-fetch";
-import { ClothCarousel } from "./Code/clothCarousel";
 
-import { ClothList } from "./Code/clothList";
-import { ClothMenu } from "./Code/clothMenu";
-import { ClothManager } from "./Code/clothWearManager";
+import { ClothCarousel, ClothList, ClothMenu, ClothManager} from "./Code";
 
 /**
  * The main class of this app. All the logic goes here.

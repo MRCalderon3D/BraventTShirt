@@ -1,6 +1,5 @@
 
 import * as MRE from "@microsoft/mixed-reality-extension-sdk";
-import { Vector3 } from "@microsoft/mixed-reality-extension-sdk";
 import App from "../app";
 
 
@@ -23,13 +22,14 @@ export class Utilities{
 
 	public static ScaleAnimation(
 		object: MRE.Actor,
-		scale: (MRE.Vector3 | Vector3),
-		duration: number
+		scale: MRE.Vector3,
+		duration: number,
+		animationCurves?: MRE.EaseCurve
 	): void {
 		MRE.Animation.AnimateTo(App.Context, object, {
 			destination: { transform: { local: { scale: scale } } },
 			duration: duration,
-			easing: MRE.AnimationEaseCurves.EaseOutSine,
+			easing:  animationCurves ?? MRE.AnimationEaseCurves.EaseOutSine,
 		});
 
 	}
